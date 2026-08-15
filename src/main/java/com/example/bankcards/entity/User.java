@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.smartcardio.Card;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
