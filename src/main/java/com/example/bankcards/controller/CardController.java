@@ -7,6 +7,7 @@ import com.example.bankcards.entity.Card;
 import com.example.bankcards.entity.Transaction;
 import com.example.bankcards.entity.User;
 import com.example.bankcards.service.CardService;
+import com.example.bankcards.service.EncryptionService;
 import com.example.bankcards.service.TransactionService;
 import com.example.bankcards.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,7 @@ public class CardController {
     private final CardService cardService;
     private final TransactionService transactionService;
     private final UserService userService;
+    private final EncryptionService encryptionService;
 
     @GetMapping
     public ResponseEntity<Page<CardResponse>> getMyCards(
@@ -36,7 +38,7 @@ public class CardController {
         log.debug("Запрос своих карт пользователем {}, pageable={}", auth.getName(), pageable);
         User user = userService.getByUsername(auth.getName());
         Page<Card> cards = cardService.getCardsByUser(user, pageable);
-        Page<CardResponse> response = cards.map(CardResponse::fromEntity);
+        Page<CardResponse> response = cards.map(card -> CardResponse.fromEntity(card, encryptionService));
 
         return ResponseEntity.ok(response);
     }
@@ -69,6 +71,6 @@ public class CardController {
         User user = userService.getByUsername(auth.getName());
         Card card = cardService.blockCard(id, user);
 
-        return ResponseEntity.ok(CardResponse.fromEntity(card));
+        return ResponseEntity.ok(CardResponse.fromEntity(card, encryptionService));
     }
 }

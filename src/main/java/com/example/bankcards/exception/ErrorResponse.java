@@ -22,6 +22,6 @@ public class ErrorResponse {
     private LocalDateTime timestamp;
     private int status;
     private String error;       // короткое название ошибки (HTTP reason)
-    private String message;     // человекочитаемое сообщение
+    private String message;     //  сообщение
     private String path;        // URI запроса, на котором произошла ошибка
 }

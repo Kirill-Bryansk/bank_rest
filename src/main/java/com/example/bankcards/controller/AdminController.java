@@ -7,6 +7,7 @@ import com.example.bankcards.entity.Card;
 import com.example.bankcards.entity.User;
 import com.example.bankcards.service.AdminService;
 import com.example.bankcards.service.CardService;
+import com.example.bankcards.service.EncryptionService;
 import com.example.bankcards.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -26,27 +27,28 @@ public class AdminController {
     private final AdminService adminService;
     private final CardService cardService;
     private final UserService userService;
+    private final EncryptionService encryptionService;
 
     @PostMapping("/cards")
     public ResponseEntity<CardResponse> createCard(@Valid @RequestBody CardRequest request) {
         log.debug("ADMIN: создание карты для userId={}", request.getUserId());
         User user = userService.getById(request.getUserId());
         Card card = adminService.createCardForUser(user, request);
-        return ResponseEntity.ok(CardResponse.fromEntity(card));
+        return ResponseEntity.ok(CardResponse.fromEntity(card, encryptionService));
     }
 
     @PutMapping("/cards/{id}/activate")
     public ResponseEntity<CardResponse> activateCard(@PathVariable Long id) {
         log.debug("ADMIN: активация карты id={}", id);
         Card card = adminService.activateCard(id);
-        return ResponseEntity.ok(CardResponse.fromEntity(card));
+        return ResponseEntity.ok(CardResponse.fromEntity(card, encryptionService));
     }
 
     @PutMapping("/cards/{id}/block")
     public ResponseEntity<CardResponse> blockCard(@PathVariable Long id) {
         log.debug("ADMIN: блокировка карты id={}", id);
         Card card = adminService.blockCard(id);
-        return ResponseEntity.ok(CardResponse.fromEntity(card));
+        return ResponseEntity.ok(CardResponse.fromEntity(card, encryptionService));
     }
 
     @DeleteMapping("/cards/{id}")
@@ -60,7 +62,7 @@ public class AdminController {
     public ResponseEntity<Page<CardResponse>> getAllCards(@PageableDefault(size = 10) Pageable pageable) {
         log.debug("ADMIN: запрос всех карт, pageable={}", pageable);
         Page<Card> cards = adminService.getAllCards(pageable);
-        Page<CardResponse> response = cards.map(CardResponse::fromEntity);
+        Page<CardResponse> response = cards.map(card -> CardResponse.fromEntity(card, encryptionService));
         return ResponseEntity.ok(response);
     }
 

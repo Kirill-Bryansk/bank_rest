@@ -2,6 +2,7 @@ package com.example.bankcards.dto;
 
 import com.example.bankcards.entity.Card;
 import com.example.bankcards.entity.CardStatus;
+import com.example.bankcards.service.EncryptionService;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -16,10 +17,13 @@ public class CardResponse {
     private CardStatus status;
     private BigDecimal balance;
 
-    public static CardResponse fromEntity(Card card) {
+    /**
+     * Создаёт DTO из сущности, расшифровывает номер карты и маскирует его.
+     */
+    public static CardResponse fromEntity(Card card, EncryptionService encryptionService) {
         CardResponse dto = new CardResponse();
         dto.setId(card.getId());
-        dto.setCardNumber(maskCardNumber(card.getCardNumber()));
+        dto.setCardNumber(maskCardNumber(encryptionService.decrypt(card.getCardNumber())));
         dto.setOwnerName(card.getOwnerName());
         dto.setExpiryDate(card.getExpiryDate());
         dto.setStatus(card.getStatus());
@@ -27,8 +31,10 @@ public class CardResponse {
         return dto;
     }
 
-    private static String maskCardNumber(String encryptedNumber) {
-        // TODO: расшифровать номер и замаскировать
-        return "**** **** **** " + encryptedNumber.substring(encryptedNumber.length() - 4);
+    private static String maskCardNumber(String cardNumber) {
+        if (cardNumber == null || cardNumber.length() < 4) {
+            return "**** **** **** ****";
+        }
+        return "**** **** **** " + cardNumber.substring(cardNumber.length() - 4);
     }
 }

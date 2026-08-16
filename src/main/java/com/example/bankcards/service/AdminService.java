@@ -24,20 +24,23 @@ public class AdminService {
 
     private final CardRepository cardRepository;
     private final UserRepository userRepository;
+    private final EncryptionService encryptionService;
 
     public Card createCardForUser(User user, CardRequest request) {
-        // Проверка уникальности номера карты
-        if (cardRepository.existsByCardNumber(request.getCardNumber())) {
-            throw new IllegalArgumentException("Карта с таким номером уже существует: " + request.getCardNumber());
+        // Шифрует номер для проверки уникальности и сохранения
+        String encryptedNumber = encryptionService.encrypt(request.getCardNumber());
+
+        if (cardRepository.existsByCardNumber(encryptedNumber)) {
+            throw new IllegalArgumentException("Карта с таким номером уже существует");
         }
 
         Card card = new Card();
         card.setUser(user);
-        card.setCardNumber(request.getCardNumber());
+        card.setCardNumber(encryptedNumber);
         card.setOwnerName(user.getUsername());
         card.setExpiryDate(request.getExpiryDate());
         card.setStatus(CardStatus.ACTIVE);
-        log.debug("Создание карты {} для пользователя id={}", request.getCardNumber(), user.getId());
+        log.debug("Создание карты для пользователя id={}", user.getId());
         return cardRepository.save(card);
     }
 

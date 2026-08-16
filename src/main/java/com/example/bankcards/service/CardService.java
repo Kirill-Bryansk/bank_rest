@@ -24,18 +24,21 @@ import java.time.LocalDate;
 public class CardService {
 
     private final CardRepository cardRepository;
+    private final EncryptionService encryptionService;
 
     @Transactional
     public Card createCard(User user, String ownerName, String cardNumber, LocalDate expiryDate) {
+        String encryptedNumber = encryptionService.encrypt(cardNumber);
+
         Card card = new Card();
         card.setUser(user);
         card.setOwnerName(ownerName);
-        card.setCardNumber(cardNumber);
+        card.setCardNumber(encryptedNumber);
         card.setExpiryDate(expiryDate);
         card.setStatus(CardStatus.ACTIVE);
         card.setBalance(BigDecimal.ZERO);
 
-        log.debug("Создание карты {} для пользователя id={}", cardNumber, user.getId());
+        log.debug("Создание карты для пользователя id={}", user.getId());
         return cardRepository.save(card);
     }
 
