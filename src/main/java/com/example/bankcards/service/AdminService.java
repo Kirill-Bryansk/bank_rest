@@ -58,6 +58,9 @@ public class AdminService {
     }
 
     public void deleteCard(Long cardId) {
+        if (!cardRepository.existsById(cardId)) {
+            throw new EntityNotFoundException("Карта не найдена с id: " + cardId);
+        }
         log.debug("Удаление карты id={}", cardId);
         cardRepository.deleteById(cardId);
     }
@@ -87,6 +90,9 @@ public class AdminService {
     }
 
     public void deleteUser(Long userId) {
+        if (!userRepository.existsById(userId)) {
+            throw new EntityNotFoundException("Пользователь не найден с id: " + userId);
+        }
         log.debug("Удаление пользователя id={}", userId);
         userRepository.deleteById(userId);
     }

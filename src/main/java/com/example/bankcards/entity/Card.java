@@ -1,5 +1,6 @@
 package com.example.bankcards.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -48,9 +49,11 @@ public class Card {
     private LocalDateTime createdAt;
 
     @OneToMany(mappedBy = "fromCard", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<Transaction> sentTransaction = new ArrayList<>();
 
     @OneToMany(mappedBy = "toCard", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<Transaction> receivedTransactions = new ArrayList<>();
 
     @PrePersist
