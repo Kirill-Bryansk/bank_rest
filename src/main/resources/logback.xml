@@ -6,6 +6,13 @@
         </encoder>
     </appender>
 
+    <!-- Дебаг-логи бизнес-логики приложения -->
+    <logger name="com.example.bankcards" level="DEBUG"/>
+
+    <!-- Подавлят шум от Hibernate SQL (включается через application.yml при необходимости) -->
+    <logger name="org.hibernate.SQL" level="WARN"/>
+    <logger name="org.hibernate.type.descriptor.sql" level="TRACE"/>
+
     <root level="INFO">
         <appender-ref ref="CONSOLE"/>
     </root>

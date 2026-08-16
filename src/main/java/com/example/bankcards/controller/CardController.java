@@ -10,6 +10,7 @@ import com.example.bankcards.service.CardService;
 import com.example.bankcards.service.TransactionService;
 import com.example.bankcards.service.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -17,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/cards")
 @RequiredArgsConstructor
@@ -31,6 +33,7 @@ public class CardController {
             Authentication auth,
             @PageableDefault(size = 10) Pageable pageable) {
 
+        log.debug("Запрос своих карт пользователем {}, pageable={}", auth.getName(), pageable);
         User user = userService.getByUsername(auth.getName());
         Page<Card> cards = cardService.getCardsByUser(user, pageable);
         Page<CardResponse> response = cards.map(CardResponse::fromEntity);
@@ -43,6 +46,8 @@ public class CardController {
             Authentication auth,
             @RequestBody TransferRequest request) {
 
+        log.debug("Перевод от пользователя {}: from={}, to={}, amount={}",
+                auth.getName(), request.getFromCardId(), request.getToCardId(), request.getAmount());
         User user = userService.getByUsername(auth.getName());
         Transaction transaction = transactionService.transfer(
                 request.getFromCardId(),
@@ -60,6 +65,7 @@ public class CardController {
             Authentication auth,
             @PathVariable Long id) {
 
+        log.debug("Блокировка карты id={} пользователем {}", id, auth.getName());
         User user = userService.getByUsername(auth.getName());
         Card card = cardService.blockCard(id, user);
 

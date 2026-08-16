@@ -1,5 +1,6 @@
 package com.example.bankcards.security.jwt;
 
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -42,7 +43,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         jwt = authHeader.substring(7); // Отрезаеет "Bearer " (7 символов)
-        username = jwtService.extractUsername(jwt);
+
+        try {
+            username = jwtService.extractUsername(jwt);
+        } catch (JwtException ex) {
+            // Невалидный или просроченный токен — не аутентифицируем,
+            // дальше запрос перехватит AuthenticationEntryPoint и вернёт JSON 401.
+            log.debug("Невалидный JWT: {} | path={}", ex.getMessage(), request.getRequestURI());
+            filterChain.doFilter(request, response);
+            return;
+        }
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
@@ -55,7 +65,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 );
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authToken);
-                log.debug("Аутентификация: {}", username);
+                String roles = userDetails.getAuthorities().stream()
+                        .map(a -> a.getAuthority())
+                        .collect(java.util.stream.Collectors.joining(", "));
+                log.debug("Аутентификация успешна: {} | roles=[{}] | path={} | method={}",
+                        username, roles, request.getRequestURI(), request.getMethod());
+            } else {
+                log.debug("JWT невалиден для пользователя {} | path={}", username, request.getRequestURI());
             }
         }
         filterChain.doFilter(request, response);

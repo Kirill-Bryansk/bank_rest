@@ -13,9 +13,6 @@ public class CardRequest {
     @Size(min = 16, max = 19)
     private String cardNumber;
 
-    @NotBlank
-    private String ownerName;
-
     @NotNull
     private LocalDate expiryDate;
 

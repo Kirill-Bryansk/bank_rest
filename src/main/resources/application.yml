@@ -42,4 +42,4 @@ springdoc:
 logging:
   level:
     com.example.bankcards: DEBUG
-    org.springframework.security: INFO
+    org.springframework.security: DEBUG
