@@ -1,9 +1,6 @@
 package com.example.bankcards.exception;
 
-/**
- * Передана неизвестная роль пользователя.
- * Обрабатывается в 400 Bad Request.
- */
+/** Неизвестная роль пользователя (400). */
 public class IllegalRoleException extends RuntimeException {
 
     public IllegalRoleException(String message) {

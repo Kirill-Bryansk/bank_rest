@@ -17,9 +17,7 @@ import java.time.LocalDateTime;
 import java.util.stream.Collectors;
 
 /**
- * Глобальный обработчик исключений.
- * Перехватывает все ошибки контроллеров и приводит их к единому формату {@link ErrorResponse}.
- * Каждая ветка логирует произошедшую ошибку для удобства отладки.
+ * Глобальный обработчик исключений. Приводит все ошибки к единому JSON-формату ErrorResponse.
  */
 @Slf4j
 @RestControllerAdvice

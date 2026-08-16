@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+/** Пользователь системы (ADMIN или USER). */
 @Entity
 @Table(name = "users")
 @Getter

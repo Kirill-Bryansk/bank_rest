@@ -15,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+/** Конфигурация Spring Security: JWT, ролевой доступ, JSON-ошибки 401/403. */
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor

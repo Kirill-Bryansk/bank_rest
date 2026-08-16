@@ -14,6 +14,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+/**
+ * Генерация и валидация JWT-токенов.
+ */
 @Service
 public class JwtService {
 

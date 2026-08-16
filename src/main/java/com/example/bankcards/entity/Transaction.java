@@ -9,6 +9,7 @@ import lombok.Setter;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+/** Транзакция перевода между картами. */
 @Entity
 @Table(name = "transactions")
 @Getter
@@ -34,7 +35,7 @@ public class Transaction {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
-    private TransactionStatus status;  // ✅ Исправлено
+    private TransactionStatus status;
 
     @Column(length = 255)
     private String description;

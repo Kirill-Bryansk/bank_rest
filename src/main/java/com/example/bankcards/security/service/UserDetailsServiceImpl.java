@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/** Загрузка пользователя из БД для Spring Security. */
 @Slf4j
 @Service
 @RequiredArgsConstructor

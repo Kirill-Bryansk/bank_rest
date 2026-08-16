@@ -8,10 +8,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
-/**
- * Единый формат тела ошибки для всех ответов REST API.
- * Используется глобальным обработчиком исключений.
- */
+/** Единый формат ошибки REST API. */
 @Data
 @Builder
 @NoArgsConstructor

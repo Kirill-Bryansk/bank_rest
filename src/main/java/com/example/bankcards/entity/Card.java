@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+/** Банковская карта с зашифрованным номером. */
 @Entity
 @Table(name = "cards")
 @Getter
@@ -25,8 +26,9 @@ public class Card {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    /** Номер карты хранится зашифрованным (AES). */
     @Column(name = "card_number", nullable = false, unique = true)
-    private String cardNumber; // буду шифровать
+    private String cardNumber;
 
     @Column(name = "owner_name", nullable = false, length = 100)
     private String ownerName;

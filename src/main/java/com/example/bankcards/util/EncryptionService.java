@@ -1,4 +1,4 @@
-package com.example.bankcards.service;
+package com.example.bankcards.util;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,11 +11,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
 /**
- * Сервис симметричного шифрования номеров банковских карт (AES/CBC/PKCS5Padding).
- * <p>
- * Использует фиксированный IV из конфигурации, чтобы шифрование было
- * детерминированным — одинаковые номера карт дают одинаковый шифротекст.
- * Это позволяет проверять уникальность номера через БД (existsByCardNumber).
+ * Шифрование номеров карт (AES/CBC). Детерминированное — для проверки уникальности.
  */
 @Slf4j
 @Service
@@ -36,9 +32,7 @@ public class EncryptionService {
         log.debug("EncryptionService инициализирован");
     }
 
-    /**
-     * Шифрует plaintext (номер карты) и возвращает Base64-строку.
-     */
+    /** Шифрует номер карты, возвращает Base64. */
     public String encrypt(String plainText) {
         try {
             Cipher cipher = Cipher.getInstance(TRANSFORMATION);
@@ -50,9 +44,7 @@ public class EncryptionService {
         }
     }
 
-    /**
-     * Расшифровывает Base64-строку и возвращает plaintext (номер карты).
-     */
+    /** Расшифровывает Base64, возвращает номер карты. */
     public String decrypt(String encryptedText) {
         try {
             Cipher cipher = Cipher.getInstance(TRANSFORMATION);

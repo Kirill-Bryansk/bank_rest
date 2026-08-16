@@ -22,10 +22,7 @@ import java.time.LocalDateTime;
 import java.util.stream.Collectors;
 
 /**
- * Обработчики ошибок Spring Security.
- * Приводят ответы 401/403 к единному JSON-формату {@link ErrorResponse},
- * чтобы в Postman всегда приходил структурированный ответ, а не HTML-страница.
- * Логгирует контекст (user, роли, URL) для отладки.
+ * Ошибки Spring Security (401/403) в JSON-формате для Postman.
  */
 @Slf4j
 @Component

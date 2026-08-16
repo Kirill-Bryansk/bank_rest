@@ -6,8 +6,7 @@ import com.example.bankcards.dto.UserResponse;
 import com.example.bankcards.entity.Card;
 import com.example.bankcards.entity.User;
 import com.example.bankcards.service.AdminService;
-import com.example.bankcards.service.CardService;
-import com.example.bankcards.service.EncryptionService;
+import com.example.bankcards.util.EncryptionService;
 import com.example.bankcards.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +24,6 @@ import org.springframework.web.bind.annotation.*;
 public class AdminController {
 
     private final AdminService adminService;
-    private final CardService cardService;
     private final UserService userService;
     private final EncryptionService encryptionService;
 

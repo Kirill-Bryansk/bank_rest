@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
 
+/** DTO для создания карты администратором. */
 @Data
 public class CardRequest {
     @NotBlank

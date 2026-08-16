@@ -9,6 +9,7 @@ import com.example.bankcards.exception.EntityNotFoundException;
 import com.example.bankcards.exception.IllegalRoleException;
 import com.example.bankcards.repository.CardRepository;
 import com.example.bankcards.repository.UserRepository;
+import com.example.bankcards.util.EncryptionService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -16,6 +17,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * Операции администратора: управление картами и пользователями.
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -26,8 +30,8 @@ public class AdminService {
     private final UserRepository userRepository;
     private final EncryptionService encryptionService;
 
+    /** Создаёт карту с зашифрованным номером. */
     public Card createCardForUser(User user, CardRequest request) {
-        // Шифрует номер для проверки уникальности и сохранения
         String encryptedNumber = encryptionService.encrypt(request.getCardNumber());
 
         if (cardRepository.existsByCardNumber(encryptedNumber)) {
@@ -44,6 +48,7 @@ public class AdminService {
         return cardRepository.save(card);
     }
 
+    /** Активирует карту по id. */
     public Card activateCard(Long cardId) {
         Card card = cardRepository.findById(cardId)
                 .orElseThrow(() -> new EntityNotFoundException("Карта не найдена с id: " + cardId));
@@ -52,6 +57,7 @@ public class AdminService {
         return cardRepository.save(card);
     }
 
+    /** Блокирует карту по id. */
     public Card blockCard(Long cardId) {
         Card card = cardRepository.findById(cardId)
                 .orElseThrow(() -> new EntityNotFoundException("Карта не найдена с id: " + cardId));
@@ -60,6 +66,7 @@ public class AdminService {
         return cardRepository.save(card);
     }
 
+    /** Удаляет карту по id. */
     public void deleteCard(Long cardId) {
         if (!cardRepository.existsById(cardId)) {
             throw new EntityNotFoundException("Карта не найдена с id: " + cardId);
@@ -68,16 +75,19 @@ public class AdminService {
         cardRepository.deleteById(cardId);
     }
 
+    /** Возвращает все карты с пагинацией. */
     public Page<Card> getAllCards(Pageable pageable) {
         log.debug("Запрос всех карт, pageable={}", pageable);
         return cardRepository.findAll(pageable);
     }
 
+    /** Возвращает всех пользователей с пагинацией. */
     public Page<User> getAllUsers(Pageable pageable) {
         log.debug("Запрос всех пользователей, pageable={}", pageable);
         return userRepository.findAll(pageable);
     }
 
+    /** Меняет роль пользователя. */
     public User changeUserRole(Long userId, String role) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("Пользователь не найден с id: " + userId));
@@ -92,6 +102,8 @@ public class AdminService {
         return userRepository.save(user);
     }
 
+    /** Удаляет пользователя по id. */
+    // TODO: проверять, нет ли карт у пользователя перед удалением
     public void deleteUser(Long userId) {
         if (!userRepository.existsById(userId)) {
             throw new EntityNotFoundException("Пользователь не найден с id: " + userId);

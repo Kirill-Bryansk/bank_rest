@@ -2,12 +2,13 @@ package com.example.bankcards.dto;
 
 import com.example.bankcards.entity.Card;
 import com.example.bankcards.entity.CardStatus;
-import com.example.bankcards.service.EncryptionService;
+import com.example.bankcards.util.EncryptionService;
 import lombok.Data;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+/** DTO карты с замаскированным номером. */
 @Data
 public class CardResponse {
     private Long id;
@@ -17,9 +18,7 @@ public class CardResponse {
     private CardStatus status;
     private BigDecimal balance;
 
-    /**
-     * Создаёт DTO из сущности, расшифровывает номер карты и маскирует его.
-     */
+    /** Создаёт DTO из сущности, расшифровывает и маскирует номер. */
     public static CardResponse fromEntity(Card card, EncryptionService encryptionService) {
         CardResponse dto = new CardResponse();
         dto.setId(card.getId());

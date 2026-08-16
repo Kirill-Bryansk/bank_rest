@@ -7,6 +7,7 @@ import com.example.bankcards.entity.User;
 import com.example.bankcards.exception.UserAlreadyExistsException;
 import com.example.bankcards.repository.UserRepository;
 import com.example.bankcards.security.jwt.JwtService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * Аутентификация: вход и регистрация.
+ */
 @Slf4j
 @RestController
 @RequestMapping("/api/auth")
@@ -33,7 +37,7 @@ public class AuthController {
     private final PasswordEncoder passwordEncoder;
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(@RequestBody AuthRequest request) {
+    public ResponseEntity<AuthResponse> login(@Valid @RequestBody AuthRequest request) {
         log.debug("Попытка входа: {}", request.getUsername());
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
@@ -47,7 +51,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody AuthRequest request) {
+    public ResponseEntity<String> register(@Valid @RequestBody AuthRequest request) {
         log.debug("Регистрация пользователя: {}", request.getUsername());
         if (userRepository.findByUsername(request.getUsername()).isPresent()) {
             throw new UserAlreadyExistsException("Имя пользователя уже занято: " + request.getUsername());

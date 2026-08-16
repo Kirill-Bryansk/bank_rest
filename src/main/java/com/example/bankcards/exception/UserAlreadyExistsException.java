@@ -1,9 +1,6 @@
 package com.example.bankcards.exception;
 
-/**
- * Попытка зарегистрировать уже существующее имя пользователя.
- * Обрабатывается в 409 Conflict.
- */
+/** Имя пользователя уже занято (409). */
 public class UserAlreadyExistsException extends RuntimeException {
 
     public UserAlreadyExistsException(String message) {

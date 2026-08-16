@@ -6,6 +6,7 @@ import lombok.Data;
 
 import java.time.LocalDateTime;
 
+/** DTO пользователя без пароля. */
 @Data
 public class UserResponse {
     private Long id;

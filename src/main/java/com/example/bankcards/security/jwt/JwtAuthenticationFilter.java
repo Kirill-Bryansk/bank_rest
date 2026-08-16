@@ -18,6 +18,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+/** Фильтр JWT: извлекает токен, аутентифицирует пользователя. */
 @Slf4j
 @Component
 @RequiredArgsConstructor
